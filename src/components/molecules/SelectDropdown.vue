@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue'
-
 const props = defineProps({
   options: {
     type: Array,
@@ -10,6 +9,10 @@ const props = defineProps({
   modelValue: {
     type: Object,
     default: null,
+  },
+  label: {
+    type: String,
+    default: '',
   },
   placeholder: {
     type: String,
@@ -29,11 +32,13 @@ const selectedValue = computed(() => (props.modelValue ? props.modelValue.value 
 
 <template>
   <select
+    :name="label"
     :value="selectedValue"
     @change="onChange"
-    class="border rounded px-2 py-1 w-full"
+    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-highlight"
+    :class="!selectedValue ? 'text-gray-500' : ''"
   >
-    <option disabled value="">
+    <option disabled value="" class="gray-500">
       {{ placeholder }}
     </option>
     <option

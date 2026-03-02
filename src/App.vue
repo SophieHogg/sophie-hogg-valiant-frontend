@@ -1,26 +1,31 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import CurrencyInput from './components/CurrencyInput.vue'
-import SelectDropdown from './components/SelectDropdown.vue'
-import { getLoanPurposesAsync, getRequestedRepaymentPeriodsAsync, getRequestedTermMonthsAsync } from './services/service'
+import { ref, computed, onMounted } from 'vue'
 import PMT from './utils/PMT'
-
-defineOptions({
-  name: 'App',
-})
-
-const loanPurposes = ref([])
-const requestedRepaymentPeriods = ref([])
-const requestedTermMonths = ref([])
+import CurrencyInput from './components/molecules/CurrencyInput.vue'
+import SelectDropdown from './components/molecules/SelectDropdown.vue'
+import RepaymentAmount from './components/organisms/RepaymentAmount.vue'
+import {
+  getLoanPurposesAsync,
+  getRequestedRepaymentPeriodsAsync,
+  getRequestedTermMonthsAsync,
+} from './services/service'
 
 const modelValue = ref('')
 const selectedLoanPurpose = ref(null)
 const selectedRepaymentPeriod = ref(null)
 const selectedTermMonth = ref(null)
+
+const loanPurposes = ref([])
+const requestedRepaymentPeriods = ref([])
+const requestedTermMonths = ref([])
+
 const loading = ref(true)
+
+const outputPerPeriod = ref()
+const repaymentPerPeriod = ref()
+
 onMounted(async () => {
   try {
-    loading.value = true
     loanPurposes.value = await getLoanPurposesAsync()
     requestedRepaymentPeriods.value = await getRequestedRepaymentPeriodsAsync()
     requestedTermMonths.value = await getRequestedTermMonthsAsync()
@@ -29,50 +34,94 @@ onMounted(async () => {
   }
 })
 
-const outputPerPeriod = ref()
-const repaymentPerPeriod = ref()
+const canCalculateRepayment = computed(() => {
+  return (
+    selectedLoanPurpose.value &&
+    selectedRepaymentPeriod.value &&
+    selectedTermMonth.value &&
+    modelValue.value
+  )
+})
 
-const handleSubmit = () => {
+const handleDataChange = () => {
+  if (!canCalculateRepayment.value) return
   // TODO: Validation and error states
   repaymentPerPeriod.value = selectedLoanPurpose.value.annualRate / selectedRepaymentPeriod.value.value
-  const unroundedOutput = PMT(repaymentPerPeriod.value, selectedTermMonth.value.value, modelValue.value)
-  outputPerPeriod.value = Math.round(unroundedOutput)
+  outputPerPeriod.value = PMT(repaymentPerPeriod.value, selectedTermMonth.value.value, modelValue.value)
 }
 
+const loanAmountInvalidMessage = computed(() => {
+  // If the user hasn't tried to enter anything, don't blast them with errors
+  if (!isLoanAmountDirty.value) return ''
+  if (!modelValue.value) return 'Loan amount is required'
+  if (isNaN(modelValue.value)) return 'Loan amount must be a number'
+  if (Number(modelValue.value) < 1000) return 'Loan amount must be greater than $1,000.00'
+  if (Number(modelValue.value) > 20000000) return 'Loan amount must be less than $20,000,000.00'
+  return ''
+})
+
+const isLoanAmountDirty = ref(false)
+
+const updateLoanAmount = (value) => {
+  isLoanAmountDirty.value = true
+  modelValue.value = value
+  handleDataChange()
+}
+
+const updateSelectedLoanPurpose = (value) => {
+  selectedLoanPurpose.value = value
+  handleDataChange()
+}
+
+const updateSelectedRepaymentPeriod = (value) => {
+  selectedRepaymentPeriod.value = value
+  handleDataChange()
+}
+
+const updateSelectedTermMonth = (value) => {
+  selectedTermMonth.value = value
+  handleDataChange()
+}
 </script>
 
-<template lang="html">
-  <div v-if="loading">
-    Loading...
-  </div>
-  <div v-else>
+<template>
+  <div class="text-neutral-primary">
+
     <CurrencyInput
+      label="Loan amount"
       :model-value="modelValue"
-      @update:model-value="(value) => modelValue = value"
+      :error-message="loanAmountInvalidMessage"
+      @update:model-value="updateLoanAmount"
     />
+    I'd like a loan for
     <SelectDropdown
-      v-model="selectedLoanPurpose"
+      label="Loan purpose"
+      :model-value="selectedLoanPurpose"
       :options="loanPurposes"
-      placeholder="Select loan purpose"
+      placeholder="Loan purpose"
+      @update:model-value="updateSelectedLoanPurpose"
     />
+    to be repaid
     <SelectDropdown
-      v-model="selectedRepaymentPeriod"
+      label="Repayment period"
+      :model-value="selectedRepaymentPeriod"
       :options="requestedRepaymentPeriods"
-      placeholder="Select repayment period"
+      placeholder="Repayment period"
+      @update:model-value="updateSelectedRepaymentPeriod"
     />
+    over the course of
     <SelectDropdown
-      v-model="selectedTermMonth"
+      label="Term"
+      :model-value="selectedTermMonth"
       :options="requestedTermMonths"
-      placeholder="Select term"
+      placeholder="Repayment term"
+      @update:model-value="updateSelectedTermMonth"
     />
-    <button
-      @click="handleSubmit"
-    >
-      Submit
-    </button>
-    <p v-if="outputPerPeriod !== undefined">
-      Repayment per period: ${{ -outputPerPeriod }}
-    </p>
-    <p v-if="outputPerPeriod !== undefined && selectedTermMonth.value !== null"> Repayment total: ${{ -outputPerPeriod * selectedTermMonth.value }}</p>
+    .
   </div>
+  <RepaymentAmount
+    v-if="outputPerPeriod && selectedTermMonth"
+    :repayment-amount="outputPerPeriod"
+    :repayment-term="selectedTermMonth.value"
+  />
 </template>

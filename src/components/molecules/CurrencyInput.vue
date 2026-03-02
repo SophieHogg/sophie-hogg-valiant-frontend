@@ -1,4 +1,6 @@
 <script setup>
+import ErrorText from '../atoms/ErrorText.vue'
+import InputLabel from '../atoms/InputLabel.vue'
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -7,6 +9,10 @@ const props = defineProps({
   label: {
     type: String,
     default: 'Currency Input',
+  },
+  placeholder: {
+    type: String,
+    default: '0.00',
   },
   errorMessage: {
     type: String,
@@ -53,20 +59,23 @@ const onKeyDown = (event) => {
 </script>
 
 <template>
-  <input
-    type="text"
-    :value="props.modelValue"
-    inputmode="decimal"
-    autocomplete="off"
-    spellcheck="false"
-    :aria-label="props.label"
-    class="border rounded px-2 py-1 w-full"
-    @input="onInput"
-    @keydown="onKeyDown"
-    @paste.prevent="onPasteOrDrop"
-    @drop.prevent="onPasteOrDrop"
-  />
-  <div v-if="props.errorMessage" class="text-red-500">
-    {{ props.errorMessage }}
+  <InputLabel :label="props.label" />
+  <div class="relative inline-block">
+    <p class="absolute py-1 px-2"> $ </p>
+    <input
+      type="text"
+      :value="props.modelValue"
+      inputmode="decimal"
+      autocomplete="off"
+      spellcheck="false"
+      :aria-label="props.label"
+      :placeholder="props.placeholder"
+      class="border rounded-full pr-2 py-1 pl-6 w-fit placeholder-gray-500"
+      @input="onInput"
+      @keydown="onKeyDown"
+      @paste.prevent="onPasteOrDrop"
+      @drop.prevent="onPasteOrDrop"
+    />
   </div>
+  <ErrorText v-if="props.errorMessage" :error-message="props.errorMessage" />
 </template>
