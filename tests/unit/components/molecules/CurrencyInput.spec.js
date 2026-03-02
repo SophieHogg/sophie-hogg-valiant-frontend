@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
-import CurrencyInput from './CurrencyInput.vue'
+import CurrencyInput from '@/components/molecules/CurrencyInput.vue'
 
 describe('CurrencyInput', () => {
   it('renders with initial value', () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '123.45' }
+      props: { modelValue: '123.45' },
     })
     const input = wrapper.find('input')
     expect(input.element.value).toBe('123.45')
@@ -12,7 +12,7 @@ describe('CurrencyInput', () => {
 
   it('emits update:modelValue with only numbers and dot', async () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '' }
+      props: { modelValue: '' },
     })
     const input = wrapper.find('input')
     await input.setValue('123.45')
@@ -22,7 +22,7 @@ describe('CurrencyInput', () => {
 
   it('blocks letters and special characters on keydown', async () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '' }
+      props: { modelValue: '' },
     })
     const input = wrapper.find('input')
     // Simulate typing a letter
@@ -35,7 +35,7 @@ describe('CurrencyInput', () => {
 
   it('allows only one dot', async () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '12.3' }
+      props: { modelValue: '12.3' },
     })
     const input = wrapper.find('input')
     // Try to type another dot
@@ -46,7 +46,7 @@ describe('CurrencyInput', () => {
 
   it('allows navigation and control keys', async () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '123' }
+      props: { modelValue: '123' },
     })
     const input = wrapper.find('input')
     for (const key of ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End']) {
@@ -58,7 +58,7 @@ describe('CurrencyInput', () => {
 
   it('updates value when modelValue prop changes', async () => {
     const wrapper = mount(CurrencyInput, {
-      props: { modelValue: '1' }
+      props: { modelValue: '1' },
     })
     await wrapper.setProps({ modelValue: '999.99' })
     const input = wrapper.find('input')

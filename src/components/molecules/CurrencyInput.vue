@@ -1,6 +1,5 @@
 <script setup>
 import ErrorText from '../atoms/ErrorText.vue'
-import InputLabel from '../atoms/InputLabel.vue'
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -59,7 +58,6 @@ const onKeyDown = (event) => {
 </script>
 
 <template>
-  <InputLabel :label="props.label" />
   <div class="relative inline-block">
     <p class="absolute py-1 px-2"> $ </p>
     <input
@@ -70,7 +68,7 @@ const onKeyDown = (event) => {
       spellcheck="false"
       :aria-label="props.label"
       :placeholder="props.placeholder"
-      class="border rounded-full pr-2 py-1 pl-6 w-fit placeholder-gray-500"
+      class="border rounded-full pr-2 py-1 pl-6 w-fit placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-highlight"
       @input="onInput"
       @keydown="onKeyDown"
       @paste.prevent="onPasteOrDrop"
