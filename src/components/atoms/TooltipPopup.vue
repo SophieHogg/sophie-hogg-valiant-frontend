@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
@@ -17,6 +17,7 @@ const props = defineProps({
 const tooltip = ref(null)
 
 const initializeTooltip = () => {
+  tooltip.value = null
   tooltip.value = tippy(document.querySelector(props.selectorId), {
     content: props.content,
     trigger: 'mouseenter',
@@ -29,8 +30,16 @@ onMounted(() => {
 })
 
 watch(() => props.content, (newContent) => {
+  if (tooltip.value && newContent) {
+    // ensure there are no leftover tooltips hanging around
+    if (tooltip.value.destroy) tooltip.value.destroy()
+    initializeTooltip()
+  }
+})
+
+onUnmounted(() => {
   if (tooltip.value) {
-    tooltip.value.setContent(newContent)
+    tooltip.value.destroy()
   }
 })
 </script>
