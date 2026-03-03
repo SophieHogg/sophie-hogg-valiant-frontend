@@ -138,7 +138,6 @@ const updateSelectedTermMonth = (value) => {
         placeholder="Repayment term"
         @update:model-value="updateSelectedTermMonth"
       />
-      .
     </div>
   </div>
   <RepaymentAmount
