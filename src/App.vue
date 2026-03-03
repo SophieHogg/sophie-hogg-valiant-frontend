@@ -92,24 +92,28 @@ const updateSelectedTermMonth = (value) => {
 
 <template>
   <CalculatorHeader />
-  <div class="flex flex-col items-center gap-8 p-4 pt-12 border-b border-solid mx-4">
+  <div class="mx-4 flex flex-col items-center gap-8 border-b border-solid p-4 pt-12">
     <ErrorAlert
       v-if="displayedError"
       :error-message="displayedError"
       error-advice="Please refresh the page"
     />
-    <div class="flex flex-col justify-center text-center w-fit">
-      <p class="mr-2">I want to borrow</p>
+    <div class="flex w-fit flex-col justify-center text-center">
+      <p class="mr-2">
+        I want to borrow
+      </p>
       <CurrencyInput
+        id="loan-amount"
         label="Loan amount"
         :model-value="modelValue"
         :error-message="loanAmountInvalidMessage"
         @update:model-value="updateLoanAmount"
       />
     </div>
-    <div class="text-neutral-primary text-center leading-10">
+    <div class="text-center leading-10 text-neutral-primary">
       I'd like a loan for
       <SelectDropdown
+        id="loan-purpose"
         label="Loan purpose"
         :model-value="selectedLoanPurpose"
         :options="loanPurposes"
@@ -118,6 +122,7 @@ const updateSelectedTermMonth = (value) => {
       />
       to be repaid
       <SelectDropdown
+        id="repayment-period"
         label="Repayment period"
         :model-value="selectedRepaymentPeriod"
         :options="requestedRepaymentPeriods"
@@ -126,6 +131,7 @@ const updateSelectedTermMonth = (value) => {
       />
       over the course of
       <SelectDropdown
+        id="repayment-term"
         label="Term"
         :model-value="selectedTermMonth"
         :options="requestedTermMonths"

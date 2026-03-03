@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     default: 'Select...',
   },
+  id: {
+    required: true,
+    type: String,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -32,13 +36,18 @@ const selectedValue = computed(() => (props.modelValue ? props.modelValue.value 
 
 <template>
   <select
+    :id
     :name="label"
     :value="selectedValue"
-    @change="onChange"
-    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-primary focus-visible:outline-none focus-visible:border-brand-focus"
     :class="!selectedValue ? 'text-gray-500' : ''"
+    class="w-fit border-b-2 border-solid border-brand-primary bg-neutral-background focus-visible:border-brand-focus focus-visible:outline-none"
+    @change="onChange"
   >
-    <option disabled value="" class="gray-500">
+    <option
+      disabled
+      value=""
+      class="text-gray-500"
+    >
       {{ placeholder }}
     </option>
     <option

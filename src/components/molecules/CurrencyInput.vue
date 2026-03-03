@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  id: {
+    type: String,
+    required: true,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -74,8 +78,11 @@ const onKeyDown = (event) => {
 
 <template>
   <div class="relative inline-block">
-    <p class="text-3xl absolute p-1"> $ </p>
+    <p class="absolute p-1 text-3xl">
+      $
+    </p>
     <input
+      :id
       type="text"
       :value="formattedValue ?? props.modelValue"
       inputmode="decimal"
@@ -83,14 +90,17 @@ const onKeyDown = (event) => {
       spellcheck="false"
       :aria-label="props.label"
       :placeholder="props.placeholder"
-      class="text-3xl pr-2 pl-8 py-1 w-fit placeholder-gray-500 bg-neutral-background border-b-2 border-solid border-brand-primary text-right focus-visible:outline-none focus-visible:border-brand-focus"
+      class="w-fit border-b-2 border-solid border-brand-primary bg-neutral-background py-1 pl-8 pr-2 text-right text-3xl placeholder:text-gray-500 focus-visible:border-brand-focus focus-visible:outline-none"
       @input="onInput"
       @keydown="onKeyDown"
       @paste.prevent="onPasteOrDrop"
       @drop.prevent="onPasteOrDrop"
       @blur="onBlur"
       @focus="formattedValue = undefined"
-    />
+    >
   </div>
-  <ErrorText v-if="props.errorMessage" :error-message="props.errorMessage" />
+  <ErrorText
+    v-if="props.errorMessage"
+    :error-message="props.errorMessage"
+  />
 </template>

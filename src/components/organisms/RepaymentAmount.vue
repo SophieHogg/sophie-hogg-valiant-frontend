@@ -39,23 +39,35 @@ const totalRepaymentAmountTooltipContent = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-4 items-center justify-center p-4">
-    <ContentCard class="h-[stretch] flex flex-col justify-between text-center w-96">
+  <div class="flex flex-row items-center justify-center gap-4 p-4">
+    <ContentCard class="flex h-[stretch] w-96 flex-col justify-between text-center">
       <p>
         Your {{ repaymentPeriod.label.toLowerCase() }} repayment amount is
       </p>
-      <TooltipPopup :content="repaymentAmountTooltipContent" selector-id="#repayment-amount-by-period">
-        <p class="text-lg font-bold" id="repayment-amount-by-period">
+      <TooltipPopup
+        :content="repaymentAmountTooltipContent"
+        selector-id="#repayment-amount-by-period"
+      >
+        <p
+          id="repayment-amount-by-period"
+          class="text-lg font-bold"
+        >
           {{ formatCurrency(-roundedRepaymentAmount, 'AUD') }}
         </p>
       </TooltipPopup>
     </ContentCard>
-    <ContentCard class="h-[stretch] flex flex-col justify-between text-center w-96">
+    <ContentCard class="flex h-[stretch] w-96 flex-col justify-between text-center">
       <p>
         Your total repayment amount over {{ repaymentTerm.label }} is
       </p>
-      <TooltipPopup :content="totalRepaymentAmountTooltipContent" selector-id="#total-repayment-amount">
-        <p class="text-lg font-bold" id="total-repayment-amount">
+      <TooltipPopup
+        :content="totalRepaymentAmountTooltipContent"
+        selector-id="#total-repayment-amount"
+      >
+        <p
+          id="total-repayment-amount"
+          class="text-lg font-bold"
+        >
           {{ formatCurrency(-roundedRepaymentAmount * repaymentTerm.value, 'AUD') }}
         </p>
       </TooltipPopup>

@@ -9,9 +9,9 @@ const props = defineProps({
 
 <template>
   <div
-    class="bg-white rounded-lg shadow-md p-4"
+    class="rounded-lg bg-white p-4 shadow-md"
     :class="props.clickable ? 'cursor-pointer hover:shadow-lg transition-shadow duration-300' : ''"
->
-    <slot name="default"></slot>
+  >
+    <slot name="default" />
   </div>
 </template>
