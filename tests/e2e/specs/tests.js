@@ -23,7 +23,7 @@ describe('Repayment Calculator', () => {
     fillForm()
     checkOutputCards('461.00', '11,064.00')
     cy.get('#loan-amount').clear()
-    // sometimes in my experience clear can be a bit flaky. 
+    // sometimes in my experience clear can be a bit flaky.
     // make sure the input is actually empty
     cy.get('#loan-amount').should('be.empty')
     cy.get('#loan-amount').type(20000)
