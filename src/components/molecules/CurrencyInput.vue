@@ -83,7 +83,7 @@ const onKeyDown = (event) => {
       spellcheck="false"
       :aria-label="props.label"
       :placeholder="props.placeholder"
-      class="text-3xl pr-2 pl-8 py-1 w-fit placeholder-gray-500 bg-neutral-background border-b-2 border-solid border-brand-primary text-right"
+      class="text-3xl pr-2 pl-8 py-1 w-fit placeholder-gray-500 bg-neutral-background border-b-2 border-solid border-brand-primary text-right focus-visible:outline-none focus-visible:border-brand-focus"
       @input="onInput"
       @keydown="onKeyDown"
       @paste.prevent="onPasteOrDrop"

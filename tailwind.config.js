@@ -10,7 +10,8 @@ export default {
         'neutral-primary': '#262c2d',
         'neutral-background': '#f8f8ff',
         'brand-primary': '#ffe857',
-        'brand-highlight': '#fffea8'
+        'brand-highlight': '#fffea8',
+        'brand-focus': '#fac400',
       } 
     }
   },

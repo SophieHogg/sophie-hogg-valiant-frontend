@@ -58,6 +58,8 @@ If this were a full component library and needed to be easily extensible, I'd pa
 
 ### Ensure outputs are returning as necessary (testing)
 
+Added extra tests to PMT to ensure proper outputs.
+
 ### Add styling and design
 
 This took a little while to figure out. I'm used to making a lot of standard forms (i.e. with labels and a standard grid-esque layout) so this one took some work to figure out how to make the inputs not look as awkward inline with the text.
@@ -68,13 +70,20 @@ Adding some of Valiant's colours (for text, background and highlights) was usefu
 
 ### Add special details (tooltips, etc.)
 
-Format currency on blur
+Format currency on blur:
 I always find it a lot easier to read a number (especially a large one) if it's formatted (with proper commas). But formatting as the user types can be jarring and if it's handled improperly can swallow inputs.
+So I made the choice to format the number on unfocus, which allows the user to read the number in the correct formatting. 
 
+Tooltips for output:
+This helps explain the rounding to the customer and also gets around the kind of strange UX of showing the total repayment amount based off the rounded term-based repayment amount.
 
+Lowercasing select options:
+Because the forms operate inline in a sentence, the capital letters come off a little out of place.
+Now the list is lowercased to fit better with the style of the form.
+(If this select were widely used, I'd hesitate to do this as it limits the component's extensibility.)
+ 
 ### Throughout:
 
 * Test with Vitest
     * writing tests at the end is laborious and it's easier to write tests with full context of the component
-    * TBD whether to write tests before (TDD) or after each component
 

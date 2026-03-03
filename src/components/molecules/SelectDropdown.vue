@@ -35,7 +35,7 @@ const selectedValue = computed(() => (props.modelValue ? props.modelValue.value 
     :name="label"
     :value="selectedValue"
     @change="onChange"
-    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-primary"
+    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-primary focus-visible:outline-none focus-visible:border-brand-focus"
     :class="!selectedValue ? 'text-gray-500' : ''"
   >
     <option disabled value="" class="gray-500">
@@ -46,7 +46,7 @@ const selectedValue = computed(() => (props.modelValue ? props.modelValue.value 
       :key="opt.value"
       :value="opt.value"
     >
-      {{ opt.label }}
+      {{ opt.label.toLowerCase() }}
     </option>
   </select>
 </template>
