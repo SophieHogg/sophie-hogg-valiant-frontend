@@ -9,7 +9,7 @@ import {
   getRequestedRepaymentPeriodsAsync,
   getRequestedTermMonthsAsync,
 } from './services/service'
-
+import CalculatorHeader from './components/atoms/CalculatorHeader.vue'
 const modelValue = ref('')
 const selectedLoanPurpose = ref(null)
 const selectedRepaymentPeriod = ref(null)
@@ -39,7 +39,8 @@ const canCalculateRepayment = computed(() => {
     selectedLoanPurpose.value &&
     selectedRepaymentPeriod.value &&
     selectedTermMonth.value &&
-    modelValue.value
+    modelValue.value &&
+    loanAmountInvalidMessage.value === ''
   )
 })
 
@@ -54,9 +55,9 @@ const loanAmountInvalidMessage = computed(() => {
   // If the user hasn't tried to enter anything, don't blast them with errors
   if (!isLoanAmountDirty.value) return ''
   if (!modelValue.value) return 'Loan amount is required'
-  if (isNaN(modelValue.value)) return 'Loan amount must be a number'
-  if (Number(modelValue.value) < 1000) return 'Loan amount must be greater than $1,000.00'
-  if (Number(modelValue.value) > 20000000) return 'Loan amount must be less than $20,000,000.00'
+  if (isNaN(modelValue.value)) return 'Must be a number'
+  if (Number(modelValue.value) < 1000) return 'Minimum amount: $1,000.00'
+  if (Number(modelValue.value) > 20000000) return 'Maximum amount: $20,000,000.00'
   return ''
 })
 
@@ -85,43 +86,49 @@ const updateSelectedTermMonth = (value) => {
 </script>
 
 <template>
-  <div class="text-neutral-primary">
-
-    <CurrencyInput
-      label="Loan amount"
-      :model-value="modelValue"
-      :error-message="loanAmountInvalidMessage"
-      @update:model-value="updateLoanAmount"
-    />
-    I'd like a loan for
-    <SelectDropdown
-      label="Loan purpose"
-      :model-value="selectedLoanPurpose"
-      :options="loanPurposes"
-      placeholder="Loan purpose"
-      @update:model-value="updateSelectedLoanPurpose"
-    />
-    to be repaid
-    <SelectDropdown
-      label="Repayment period"
-      :model-value="selectedRepaymentPeriod"
-      :options="requestedRepaymentPeriods"
-      placeholder="Repayment period"
-      @update:model-value="updateSelectedRepaymentPeriod"
-    />
-    over the course of
-    <SelectDropdown
-      label="Term"
-      :model-value="selectedTermMonth"
-      :options="requestedTermMonths"
-      placeholder="Repayment term"
-      @update:model-value="updateSelectedTermMonth"
-    />
-    .
+  <CalculatorHeader />
+  <div class="flex flex-col items-center gap-8 p-4 pt-12 border-b border-solid mx-4">
+    <div class="flex flex-col justify-center text-center w-fit">
+      <p class="mr-2">I want to borrow</p>
+      <CurrencyInput
+        label="Loan amount"
+        :model-value="modelValue"
+        :error-message="loanAmountInvalidMessage"
+        @update:model-value="updateLoanAmount"
+      />
+    </div>
+    <div class="text-neutral-primary text-center leading-10">
+      I'd like a loan for
+      <SelectDropdown
+        label="Loan purpose"
+        :model-value="selectedLoanPurpose"
+        :options="loanPurposes"
+        placeholder="Loan purpose"
+        @update:model-value="updateSelectedLoanPurpose"
+      />
+      to be repaid
+      <SelectDropdown
+        label="Repayment period"
+        :model-value="selectedRepaymentPeriod"
+        :options="requestedRepaymentPeriods"
+        placeholder="Repayment period"
+        @update:model-value="updateSelectedRepaymentPeriod"
+      />
+      over the course of
+      <SelectDropdown
+        label="Term"
+        :model-value="selectedTermMonth"
+        :options="requestedTermMonths"
+        placeholder="Repayment term"
+        @update:model-value="updateSelectedTermMonth"
+      />
+      .
+    </div>
   </div>
   <RepaymentAmount
     v-if="outputPerPeriod && selectedTermMonth"
     :repayment-amount="outputPerPeriod"
-    :repayment-term="selectedTermMonth.value"
+    :repayment-term="selectedTermMonth"
+    :repayment-period="selectedRepaymentPeriod"
   />
 </template>
