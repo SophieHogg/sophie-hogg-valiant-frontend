@@ -79,6 +79,7 @@ describe('App.vue', () => {
     wrapper.vm.updateSelectedRepaymentPeriod(repaymentPeriod)
     wrapper.vm.updateSelectedTermMonth(termMonth)
     wrapper.vm.updateLoanAmount(10000)
+    expect(Math.round(wrapper.vm.outputPerPeriod)).toBe(-888)
     wrapper.vm.updateLoanAmount(20000)
     expect(Math.round(wrapper.vm.outputPerPeriod)).toBe(-1777)
   })
