@@ -9,8 +9,9 @@ export default {
       colors: {
         'neutral-primary': '#262c2d',
         'neutral-background': '#f8f8ff',
-        'brand-highlight': '#fffea8',
-      }
+        'brand-primary': '#ffe857',
+        'brand-highlight': '#fffea8'
+      } 
     }
   },
   plugins: [],

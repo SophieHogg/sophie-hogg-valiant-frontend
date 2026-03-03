@@ -1,9 +1,10 @@
 <script setup>
 import ErrorText from '../atoms/ErrorText.vue'
+import { ref } from 'vue'
 const props = defineProps({
   modelValue: {
-    type: [String, Number],
-    default: '',
+    type: Number,
+    default: undefined,
   },
   label: {
     type: String,
@@ -20,8 +21,19 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
+const formattedValue = ref()
+
+const formatValue = () => {
+  if (!props.modelValue) return ''
+  const num = Number(props.modelValue)
+  if (isNaN(num)) return props.modelValue
+  formattedValue.value = num.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 const onInput = (event) => {
-  emit('update:modelValue', event.target.value)
+  formattedValue.value = undefined
+  const roundedValue = Math.round(Number(event.target.value) * 100) / 100
+  emit('update:modelValue', roundedValue)
 }
 
 const onPasteOrDrop = (event) => {
@@ -39,6 +51,9 @@ const allowedKeys = [
   'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End',
 ]
 
+const onBlur = () => {
+  formatValue()
+}
 const onKeyDown = (event) => {
   const { key, target } = event
   if (
@@ -59,20 +74,22 @@ const onKeyDown = (event) => {
 
 <template>
   <div class="relative inline-block">
-    <p class="absolute py-1 px-2"> $ </p>
+    <p class="text-3xl absolute p-1"> $ </p>
     <input
       type="text"
-      :value="props.modelValue"
+      :value="formattedValue ?? props.modelValue"
       inputmode="decimal"
       autocomplete="off"
       spellcheck="false"
       :aria-label="props.label"
       :placeholder="props.placeholder"
-      class="border rounded-full pr-2 py-1 pl-6 w-fit placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-highlight"
+      class="text-3xl pr-2 pl-8 py-1 w-fit placeholder-gray-500 bg-neutral-background border-b-2 border-solid border-brand-primary text-right"
       @input="onInput"
       @keydown="onKeyDown"
       @paste.prevent="onPasteOrDrop"
       @drop.prevent="onPasteOrDrop"
+      @blur="onBlur"
+      @focus="formattedValue = undefined"
     />
   </div>
   <ErrorText v-if="props.errorMessage" :error-message="props.errorMessage" />

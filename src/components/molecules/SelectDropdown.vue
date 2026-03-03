@@ -35,7 +35,7 @@ const selectedValue = computed(() => (props.modelValue ? props.modelValue.value 
     :name="label"
     :value="selectedValue"
     @change="onChange"
-    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-highlight"
+    class="w-fit bg-neutral-background border-solid border-b-2 border-brand-primary"
     :class="!selectedValue ? 'text-gray-500' : ''"
   >
     <option disabled value="" class="gray-500">
