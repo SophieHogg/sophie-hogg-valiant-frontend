@@ -41,11 +41,10 @@ const totalRepaymentAmountTooltipContent = computed(() => {
 <template>
   <div
     id="repayment-amount-cards"
-    class="flex flex-row items-center justify-center gap-4 p-4"
+    class="grid grid-cols-2 gap-4 p-4"
   >
     <ContentCard
-      id="term-repayment-card"
-      class="flex h-full w-96 flex-1 flex-col justify-between text-center"
+      class="flex size-full max-w-[650px] flex-col justify-between text-center"
     >
       <p>
         Your {{ repaymentPeriod.label.toLowerCase() }} repayment amount is
@@ -63,8 +62,7 @@ const totalRepaymentAmountTooltipContent = computed(() => {
       </TooltipPopup>
     </ContentCard>
     <ContentCard
-      id="total-repayment-card"
-      class="flex h-full w-96 flex-1 flex-col justify-between text-center"
+      class="flex size-full max-w-[650px] flex-col justify-between text-center"
     >
       <p>
         Your total repayment amount over {{ repaymentTerm.label }} is
@@ -85,13 +83,10 @@ const totalRepaymentAmountTooltipContent = computed(() => {
 </template>
 
 <style scoped>
-#term-repayment-card, #total-repayment-card {
-  /* fallback for h-full for MacOS and iOS */
-  height: -webkit-fill-available
-}
-@media (max-width: 600px) {
+@media (max-width: 600px), (min-width: 1200px) {
   #repayment-amount-cards {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    justify-items: center;
   }
 }
 </style>
