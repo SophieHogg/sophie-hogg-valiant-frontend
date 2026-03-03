@@ -87,3 +87,4 @@ Now the list is lowercased to fit better with the style of the form.
 * Test with Vitest
     * writing tests at the end is laborious and it's easier to write tests with full context of the component
 
+* For Cypress testing, I had to use the alternate command `npx cypress run --headed` due to a Mac / Cypress clash on this version, documented in the [Cypress library issues](https://github.com/cypress-io/cypress/issues/31072). It's fixed in a more recent version of Cypress (14.2.0).
