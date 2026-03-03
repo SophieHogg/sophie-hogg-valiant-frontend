@@ -6,8 +6,8 @@ describe('ContentCard', () => {
     const slotContent = 'This is the slot content!'
     const wrapper = mount(ContentCard, {
       slots: {
-        default: <div>{slotContent}</div>
-      }
+        default: `<div>${slotContent}</div>`,
+      },
     })
     expect(wrapper.text()).toContain(slotContent)
   })

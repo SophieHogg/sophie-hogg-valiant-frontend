@@ -1,6 +1,11 @@
 import { mount } from '@vue/test-utils'
 import RepaymentAmount from '@/components/organisms/RepaymentAmount.vue'
 import formatCurrency from '@/utils/formatCurrency'
+import { vi } from 'vitest'
+
+vi.mock('tippy.js', () => ({
+  default: vi.fn(() => ({ destroy: vi.fn() })),
+}))
 
 describe('RepaymentAmount.vue', () => {
   const defaultProps = {
@@ -13,7 +18,11 @@ describe('RepaymentAmount.vue', () => {
   it('renders repayment amount and total repayment amount', () => {
     const wrapper = mount(RepaymentAmount, {
       global: {
-        stubs: { TooltipContent: true },
+        stubs: {
+          TooltipPopup: {
+            template: '<div id="repayment-amount-by-period"><slot></slot></div>',
+          },
+        },
       },
       props: defaultProps,
     })

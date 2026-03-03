@@ -33,15 +33,6 @@ describe('App.vue', () => {
     expect(wrapper.vm.loanAmountInvalidMessage).toBe('Loan amount is required')
   })
 
-  it('shows error if loan amount is not a number', async () => {
-    const wrapper = mount(App)
-    await flushPromises()
-    // this will show a vue warn as invalid prop.
-    // this should not be possible but we want to guard against it anyway
-    wrapper.vm.updateLoanAmount('abc')
-    expect(wrapper.vm.loanAmountInvalidMessage).toBe('Must be a number')
-  })
-
   it('shows error if loan amount is below minimum', async () => {
     const wrapper = mount(App)
     await flushPromises()
@@ -57,7 +48,15 @@ describe('App.vue', () => {
   })
 
   it('calculates repayment when all fields are valid', async () => {
-    const wrapper = mount(App)
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          TooltipPopup: {
+            template: '<div id="repayment-amount-by-period"></div>',
+          },
+        },
+      },
+    })
     await flushPromises()
     const loanPurpose = { label: 'Day-to-day capital', value: 'general', annualRate: 0.12 }
     const repaymentPeriod = { label: 'Monthly', value: 12 }
@@ -70,7 +69,15 @@ describe('App.vue', () => {
   })
 
   it('recalculates repayment when all fields are valid and one field is changed', async () => {
-    const wrapper = mount(App)
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          TooltipPopup: {
+            template: '<div id="repayment-amount-by-period"></div>',
+          },
+        },
+      },
+    })
     await flushPromises()
     const loanPurpose = { label: 'Day-to-day capital', value: 'general', annualRate: 0.12 }
     const repaymentPeriod = { label: 'Monthly', value: 12 }

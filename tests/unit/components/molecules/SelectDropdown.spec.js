@@ -13,6 +13,7 @@ describe('SelectDropdown', () => {
       props: {
         options,
         placeholder: 'Choose one',
+        id: 'test-select',
       },
     })
     const select = wrapper.find('select')
@@ -26,6 +27,7 @@ describe('SelectDropdown', () => {
       props: {
         options,
         modelValue: null,
+        id: 'test-select',
       },
     })
     const select = wrapper.find('select')
@@ -39,6 +41,7 @@ describe('SelectDropdown', () => {
       props: {
         options,
         modelValue: null,
+        id: 'test-select',
       },
     })
     const select = wrapper.find('select')
@@ -50,6 +53,7 @@ describe('SelectDropdown', () => {
       props: {
         options,
         modelValue: options[2],
+        id: 'test-select',
       },
     })
     const select = wrapper.find('select')
