@@ -4,13 +4,14 @@ import PMT from './utils/PMT'
 import CurrencyInput from './components/molecules/CurrencyInput.vue'
 import SelectDropdown from './components/molecules/SelectDropdown.vue'
 import RepaymentAmount from './components/organisms/RepaymentAmount.vue'
+import CalculatorHeader from './components/atoms/CalculatorHeader.vue'
+import ErrorAlert from './components/atoms/ErrorAlert.vue'
 import {
   getLoanPurposesAsync,
   getRequestedRepaymentPeriodsAsync,
   getRequestedTermMonthsAsync,
 } from './services/service'
-import CalculatorHeader from './components/atoms/CalculatorHeader.vue'
-const modelValue = ref('')
+const modelValue = ref(undefined)
 const selectedLoanPurpose = ref(null)
 const selectedRepaymentPeriod = ref(null)
 const selectedTermMonth = ref(null)
@@ -24,11 +25,15 @@ const loading = ref(true)
 const outputPerPeriod = ref()
 const repaymentPerPeriod = ref()
 
+const displayedError = ref('')
+
 onMounted(async () => {
   try {
     loanPurposes.value = await getLoanPurposesAsync()
     requestedRepaymentPeriods.value = await getRequestedRepaymentPeriodsAsync()
     requestedTermMonths.value = await getRequestedTermMonthsAsync()
+  } catch (error) {
+    displayedError.value = error.toString()
   } finally {
     loading.value = false
   }
@@ -88,6 +93,11 @@ const updateSelectedTermMonth = (value) => {
 <template>
   <CalculatorHeader />
   <div class="flex flex-col items-center gap-8 p-4 pt-12 border-b border-solid mx-4">
+    <ErrorAlert
+      v-if="displayedError"
+      :error-message="displayedError"
+      error-advice="Please refresh the page"
+    />
     <div class="flex flex-col justify-center text-center w-fit">
       <p class="mr-2">I want to borrow</p>
       <CurrencyInput

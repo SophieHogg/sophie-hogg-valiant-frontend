@@ -20,9 +20,7 @@ export const getLoanPurposesAsync = async () => {
     }
     return res.json()
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to fetch loan purposes', err)
-    return []
+    throw new Error('Failed to fetch loan purposes')
   }
 }
 
@@ -38,9 +36,7 @@ export const getRequestedRepaymentPeriodsAsync = async () => {
     }
     return res.json()
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to fetch requested repayment periods', err)
-    return []
+    throw new Error('Failed to fetch requested repayment periods')
   }
 }
 
@@ -56,8 +52,6 @@ export const getRequestedTermMonthsAsync = async () => {
     }
     return await res.json()
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to fetch requested term months', err)
-    return []
+    throw new Error('Failed to fetch requested term months')
   }
 }
