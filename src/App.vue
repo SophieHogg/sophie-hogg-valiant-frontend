@@ -101,60 +101,76 @@ const updateSelectedTermMonth = (value) => {
 
 <template>
   <CalculatorHeader />
-  <div class="mx-4 flex flex-col items-center gap-8 border-b border-solid p-4 pt-12">
-    <ErrorAlert
-      v-if="displayedError"
-      :error-message="displayedError"
-      error-advice="Please refresh the page."
-      :error-detail="errorDetail"
+  <div class="w-screen h-full flex flex-grow overflow-auto  min-w-[270px]">
+    <div
+      id="repayment-form"
+      class="mx-4 flex flex-col items-center gap-8 border-b border-solid p-4 pt-12"
+    >
+      <ErrorAlert
+        v-if="displayedError"
+        :error-message="displayedError"
+        error-advice="Please refresh the page."
+        :error-detail="errorDetail"
+      />
+      <div class="flex w-fit flex-col justify-center text-center">
+        <p class="mr-2">
+          I want to borrow
+        </p>
+        <CurrencyInput
+          id="loan-amount"
+          label="Loan amount"
+          :model-value="loanAmount"
+          :error-message="loanAmountInvalidMessage"
+          @update:model-value="updateLoanAmount"
+        />
+      </div>
+      <div class="text-center leading-10 text-neutral-primary">
+        I'd like a loan for
+        <SelectDropdown
+          id="loan-purpose"
+          label="Loan purpose"
+          :model-value="selectedLoanPurpose"
+          :options="loanPurposes"
+          placeholder="Loan purpose"
+          @update:model-value="updateSelectedLoanPurpose"
+        />
+        to be repaid
+        <SelectDropdown
+          id="repayment-period"
+          label="Repayment period"
+          :model-value="selectedRepaymentPeriod"
+          :options="requestedRepaymentPeriods"
+          placeholder="Repayment period"
+          @update:model-value="updateSelectedRepaymentPeriod"
+        />
+        over the course of
+        <SelectDropdown
+          id="repayment-term"
+          label="Term"
+          :model-value="selectedTermMonth"
+          :options="requestedTermMonths"
+          placeholder="Repayment term"
+          @update:model-value="updateSelectedTermMonth"
+        />
+      </div>
+    </div>
+    <RepaymentAmount
+      v-if="outputPerPeriod && selectedTermMonth"
+      :repayment-amount="outputPerPeriod"
+      :total-repayment-periods="totalRepaymentPeriods"
+      :repayment-term-label="selectedTermMonth.label ?? ''"
+      :repayment-period-label="selectedRepaymentPeriod.label ?? ''"
     />
-    <div class="flex w-fit flex-col justify-center text-center">
-      <p class="mr-2">
-        I want to borrow
-      </p>
-      <CurrencyInput
-        id="loan-amount"
-        label="Loan amount"
-        :model-value="loanAmount"
-        :error-message="loanAmountInvalidMessage"
-        @update:model-value="updateLoanAmount"
-      />
-    </div>
-    <div class="text-center leading-10 text-neutral-primary">
-      I'd like a loan for
-      <SelectDropdown
-        id="loan-purpose"
-        label="Loan purpose"
-        :model-value="selectedLoanPurpose"
-        :options="loanPurposes"
-        placeholder="Loan purpose"
-        @update:model-value="updateSelectedLoanPurpose"
-      />
-      to be repaid
-      <SelectDropdown
-        id="repayment-period"
-        label="Repayment period"
-        :model-value="selectedRepaymentPeriod"
-        :options="requestedRepaymentPeriods"
-        placeholder="Repayment period"
-        @update:model-value="updateSelectedRepaymentPeriod"
-      />
-      over the course of
-      <SelectDropdown
-        id="repayment-term"
-        label="Term"
-        :model-value="selectedTermMonth"
-        :options="requestedTermMonths"
-        placeholder="Repayment term"
-        @update:model-value="updateSelectedTermMonth"
-      />
-    </div>
   </div>
-  <RepaymentAmount
-    v-if="outputPerPeriod && selectedTermMonth"
-    :repayment-amount="outputPerPeriod"
-    :total-repayment-periods="totalRepaymentPeriods"
-    :repayment-term-label="selectedTermMonth.label ?? ''"
-    :repayment-period-label="selectedRepaymentPeriod.label ?? ''"
-  />
 </template>
+
+<style>
+@media (max-width: 600px) {
+  #loan-amount {
+    width: 280px
+  }
+  #repayment-form{
+    margin: 8px 4px;
+  }
+}
+</style>

@@ -77,7 +77,9 @@ const onKeyDown = (event) => {
 </script>
 
 <template>
-  <div class="relative inline-block">
+  <div
+    class="relative inline-block"
+  >
     <p class="absolute p-1 text-3xl">
       $
     </p>
