@@ -12,7 +12,7 @@ import {
   getRequestedTermMonthsAsync,
 } from './services/service'
 
-const modelValue = ref(undefined)
+const loanAmount = ref(undefined)
 const selectedLoanPurpose = ref(null)
 const selectedRepaymentPeriod = ref(null)
 const selectedTermMonth = ref(null)
@@ -52,7 +52,7 @@ const canCalculateRepayment = computed(() => {
     selectedLoanPurpose.value &&
     selectedRepaymentPeriod.value &&
     selectedTermMonth.value &&
-    modelValue.value &&
+    loanAmount.value &&
     loanAmountInvalidMessage.value === ''
   )
 })
@@ -62,16 +62,16 @@ const handleDataChange = () => {
   repaymentPerPeriod.value = selectedLoanPurpose.value.annualRate / selectedRepaymentPeriod.value.value
   const repaymentPeriodInYears = selectedTermMonth.value.value / 12
   totalRepaymentPeriods.value = repaymentPeriodInYears * selectedRepaymentPeriod.value.value
-  outputPerPeriod.value = PMT(repaymentPerPeriod.value, totalRepaymentPeriods.value, modelValue.value)
+  outputPerPeriod.value = PMT(repaymentPerPeriod.value, totalRepaymentPeriods.value, loanAmount.value)
 }
 
 const loanAmountInvalidMessage = computed(() => {
   // If the user hasn't tried to enter anything, don't blast them with errors
   if (!isLoanAmountDirty.value) return ''
-  if (!modelValue.value) return 'Loan amount is required'
-  if (isNaN(modelValue.value)) return 'Must be a number'
-  if (Number(modelValue.value) < 1000) return 'Minimum amount: $1,000.00'
-  if (Number(modelValue.value) > 20000000) return 'Maximum amount: $20,000,000.00'
+  if (!loanAmount.value) return 'Loan amount is required'
+  if (isNaN(loanAmount.value)) return 'Must be a number'
+  if (Number(loanAmount.value) < 1000) return 'Minimum amount: $1,000.00'
+  if (Number(loanAmount.value) > 20000000) return 'Maximum amount: $20,000,000.00'
   return ''
 })
 
@@ -79,7 +79,7 @@ const isLoanAmountDirty = ref(false)
 
 const updateLoanAmount = (value) => {
   isLoanAmountDirty.value = true
-  modelValue.value = value
+  loanAmount.value = value
   handleDataChange()
 }
 
@@ -115,7 +115,7 @@ const updateSelectedTermMonth = (value) => {
       <CurrencyInput
         id="loan-amount"
         label="Loan amount"
-        :model-value="modelValue"
+        :model-value="loanAmount"
         :error-message="loanAmountInvalidMessage"
         @update:model-value="updateLoanAmount"
       />
