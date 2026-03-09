@@ -10,9 +10,10 @@ vi.mock('tippy.js', () => ({
 describe('RepaymentAmount.vue', () => {
   const defaultProps = {
     repaymentAmount: 1234.56,
-    repaymentTerm: { label: '12 months', value: 12 },
-    repaymentPeriod: { label: 'Monthly', value: 1 },
+    repaymentTermLabel: '12 months',
+    repaymentPeriodLabel: 'Weekly',
     errorMessage: '',
+    totalRepaymentPeriods: 52,
   }
 
   it('renders repayment amount and total repayment amount', () => {
@@ -32,7 +33,7 @@ describe('RepaymentAmount.vue', () => {
       formatCurrency(-rounded, 'AUD')
     )
     expect(wrapper.find('#total-repayment-amount').text()).toContain(
-      formatCurrency(-rounded * defaultProps.repaymentTerm.value, 'AUD')
+      formatCurrency(-rounded * defaultProps.totalRepaymentPeriods, 'AUD')
     )
   })
 
@@ -51,8 +52,8 @@ describe('RepaymentAmount.vue', () => {
       props: defaultProps,
     })
     const expectedPeriod = formatCurrency(Math.round(-defaultProps.repaymentAmount * 100) / 100)
-    const expectedTotal = formatCurrency((Math.round(-defaultProps.repaymentAmount * defaultProps.repaymentTerm.value * 100) / 100))
-    const expectedTooltip = `Rounded from ${expectedPeriod} * ${defaultProps.repaymentTerm.value} = ${expectedTotal}`
+    const expectedTotal = formatCurrency((Math.round(-defaultProps.repaymentAmount * defaultProps.totalRepaymentPeriods * 100) / 100))
+    const expectedTooltip = `Rounded from ${expectedPeriod} * ${defaultProps.totalRepaymentPeriods} = ${expectedTotal}`
     const tooltips = wrapper.findAllComponents({ name: 'TooltipPopup' })
     expect(tooltips[1].props('content')).toBe(expectedTooltip)
   })
@@ -66,6 +67,6 @@ describe('RepaymentAmount.vue', () => {
     })
     await wrapper.setProps({ repaymentAmount: -2000 })
     expect(wrapper.text()).toContain(formatCurrency(2000, 'AUD'))
-    expect(wrapper.text()).toContain(formatCurrency(2000 * defaultProps.repaymentTerm.value, 'AUD'))
+    expect(wrapper.text()).toContain(formatCurrency(2000 * defaultProps.totalRepaymentPeriods, 'AUD'))
   })
 })

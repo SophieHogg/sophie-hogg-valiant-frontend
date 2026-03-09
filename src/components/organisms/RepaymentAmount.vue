@@ -14,13 +14,17 @@ const props = defineProps({
     type: Number,
     default: null,
   },
-  repaymentTerm: {
+  repaymentTermLabel: {
     required: true,
-    type: Object,
+    type: String,
   },
-  repaymentPeriod: {
+  totalRepaymentPeriods: {
     required: true,
-    type: Object,
+    type: Number,
+  },
+  repaymentPeriodLabel: {
+    required: true,
+    type: String,
   },
 })
 
@@ -33,8 +37,8 @@ const repaymentAmountTooltipContent = computed(() => {
 })
 
 const totalRepaymentAmountTooltipContent = computed(() => {
-  const currency = formatCurrency((Math.round(-props.repaymentAmount * props.repaymentTerm.value * 100) / 100))
-  return `Rounded from ${repaymentAmountTooltipContent.value} * ${props.repaymentTerm.value} = ${currency}`
+  const currency = formatCurrency((Math.round(-props.repaymentAmount * props.totalRepaymentPeriods * 100) / 100))
+  return `Rounded from ${repaymentAmountTooltipContent.value} * ${props.totalRepaymentPeriods} = ${currency}`
 })
 </script>
 
@@ -47,7 +51,7 @@ const totalRepaymentAmountTooltipContent = computed(() => {
       class="flex size-full max-w-[650px] flex-col justify-between text-center"
     >
       <p>
-        Your {{ repaymentPeriod.label.toLowerCase() }} repayment amount is
+        Your {{ repaymentPeriodLabel.toLowerCase() }} repayment amount is
       </p>
       <TooltipPopup
         :content="repaymentAmountTooltipContent"
@@ -65,7 +69,7 @@ const totalRepaymentAmountTooltipContent = computed(() => {
       class="flex size-full max-w-[650px] flex-col justify-between text-center"
     >
       <p>
-        Your total repayment amount over {{ repaymentTerm.label }} is
+        Your total repayment amount over {{ repaymentTermLabel }} is
       </p>
       <TooltipPopup
         :content="totalRepaymentAmountTooltipContent"
@@ -75,7 +79,7 @@ const totalRepaymentAmountTooltipContent = computed(() => {
           id="total-repayment-amount"
           class="text-lg font-bold"
         >
-          {{ formatCurrency(-roundedRepaymentAmount * repaymentTerm.value, 'AUD') }}
+          {{ formatCurrency(-roundedRepaymentAmount * totalRepaymentPeriods, 'AUD') }}
         </p>
       </TooltipPopup>
     </ContentCard>
