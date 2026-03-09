@@ -20,6 +20,10 @@ export const mockRepaymentPeriods = [
     label: 'Monthly',
     value: 12,
   },
+  {
+    label: 'Weekly',
+    value: 52,
+  },
 ]
 
 export const mockTerms = [

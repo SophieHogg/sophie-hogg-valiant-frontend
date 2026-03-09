@@ -11,6 +11,7 @@ import {
   getRequestedRepaymentPeriodsAsync,
   getRequestedTermMonthsAsync,
 } from './services/service'
+
 const modelValue = ref(undefined)
 const selectedLoanPurpose = ref(null)
 const selectedRepaymentPeriod = ref(null)
@@ -24,16 +25,23 @@ const loading = ref(true)
 
 const outputPerPeriod = ref()
 const repaymentPerPeriod = ref()
-
+const totalRepaymentPeriods = ref(0)
 const displayedError = ref('')
+const errorDetail = ref()
 
 onMounted(async () => {
   try {
-    loanPurposes.value = await getLoanPurposesAsync()
-    requestedRepaymentPeriods.value = await getRequestedRepaymentPeriodsAsync()
-    requestedTermMonths.value = await getRequestedTermMonthsAsync()
+    const [loanPurposesResult, requestedRepaymentPeriodsResult, requestedTermMonthsResult] = await Promise.all([
+      getLoanPurposesAsync(),
+      getRequestedRepaymentPeriodsAsync(),
+      getRequestedTermMonthsAsync(),
+    ])
+    loanPurposes.value = loanPurposesResult
+    requestedRepaymentPeriods.value = requestedRepaymentPeriodsResult
+    requestedTermMonths.value = requestedTermMonthsResult
   } catch (error) {
-    displayedError.value = error.toString()
+    displayedError.value = 'Form loading failed'
+    errorDetail.value = `${error.toString()} with status ${error.cause}`
   } finally {
     loading.value = false
   }
@@ -51,9 +59,10 @@ const canCalculateRepayment = computed(() => {
 
 const handleDataChange = () => {
   if (!canCalculateRepayment.value) return
-  // TODO: Validation and error states
   repaymentPerPeriod.value = selectedLoanPurpose.value.annualRate / selectedRepaymentPeriod.value.value
-  outputPerPeriod.value = PMT(repaymentPerPeriod.value, selectedTermMonth.value.value, modelValue.value)
+  const repaymentPeriodInYears = selectedTermMonth.value.value / 12
+  totalRepaymentPeriods.value = repaymentPeriodInYears * selectedRepaymentPeriod.value.value
+  outputPerPeriod.value = PMT(repaymentPerPeriod.value, totalRepaymentPeriods.value, modelValue.value)
 }
 
 const loanAmountInvalidMessage = computed(() => {
@@ -96,7 +105,8 @@ const updateSelectedTermMonth = (value) => {
     <ErrorAlert
       v-if="displayedError"
       :error-message="displayedError"
-      error-advice="Please refresh the page"
+      error-advice="Please refresh the page."
+      :error-detail="errorDetail"
     />
     <div class="flex w-fit flex-col justify-center text-center">
       <p class="mr-2">
@@ -143,7 +153,8 @@ const updateSelectedTermMonth = (value) => {
   <RepaymentAmount
     v-if="outputPerPeriod && selectedTermMonth"
     :repayment-amount="outputPerPeriod"
-    :repayment-term="selectedTermMonth"
-    :repayment-period="selectedRepaymentPeriod"
+    :total-repayment-periods="totalRepaymentPeriods"
+    :repayment-term-label="selectedTermMonth.label ?? ''"
+    :repayment-period-label="selectedRepaymentPeriod.label ?? ''"
   />
 </template>

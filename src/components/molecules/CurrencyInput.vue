@@ -47,7 +47,7 @@ const onPasteOrDrop = (event) => {
 
   const pastedData = event.clipboardData.getData('text')
   if (/^[\d.]+$/.test(pastedData)) {
-    emit('update:modelValue', pastedData)
+    emit('update:modelValue', parseFloat(pastedData, 10))
   }
 }
 

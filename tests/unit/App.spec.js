@@ -47,7 +47,14 @@ describe('App.vue', () => {
     expect(wrapper.vm.loanAmountInvalidMessage).toBe('Maximum amount: $20,000,000.00')
   })
 
-  it('calculates repayment when all fields are valid', async () => {
+  it.each([
+    [mockRepaymentPeriods[0], mockTerms[0], 13, -794],
+    [mockRepaymentPeriods[0], mockTerms[1], 26, -409],
+    [mockRepaymentPeriods[1], mockTerms[0], 6, -1725],
+    [mockRepaymentPeriods[1], mockTerms[1], 12, -888],
+    [mockRepaymentPeriods[2], mockTerms[0], 26, -397],
+    [mockRepaymentPeriods[2], mockTerms[1], 52, -204],
+  ])('calculates repayment when all fields are valid', async (repaymentPeriod, termMonth, expectedTotalRepaymentPeriods, expectedOutput) => {
     const wrapper = mount(App, {
       global: {
         stubs: {
@@ -59,13 +66,12 @@ describe('App.vue', () => {
     })
     await flushPromises()
     const loanPurpose = { label: 'Day-to-day capital', value: 'general', annualRate: 0.12 }
-    const repaymentPeriod = { label: 'Monthly', value: 12 }
-    const termMonth = { label: '12 months', value: 12 }
     wrapper.vm.updateSelectedLoanPurpose(loanPurpose)
     wrapper.vm.updateSelectedRepaymentPeriod(repaymentPeriod)
     wrapper.vm.updateSelectedTermMonth(termMonth)
     wrapper.vm.updateLoanAmount(10000)
-    expect(Math.round(wrapper.vm.outputPerPeriod)).toBe(-888)
+    expect(wrapper.vm.totalRepaymentPeriods).toBe(expectedTotalRepaymentPeriods)
+    expect(Math.round(wrapper.vm.outputPerPeriod)).toBe(expectedOutput)
   })
 
   it('recalculates repayment when all fields are valid and one field is changed', async () => {
